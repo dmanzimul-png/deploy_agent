@@ -14,12 +14,11 @@ touch "$parent_dir/Helpers/assets.csv"
 touch "$parent_dir/Helpers/config.json"
 touch "$parent_dir/reports/reports.log"
 
-# Confirm creation
 echo "Folders and files created successfully"
 
-# Config file path
 config_file="$parent_dir/Helpers/config.json"
 
+# Trap Ctrl+C
 trap "
 echo 'Script interrupted! Archiving project...'
 tar -czf \"${parent_dir}_archive.tar.gz\" \"$parent_dir\"
@@ -35,15 +34,17 @@ warning=${warning:-75}
 read -p "failure level set [default=50]: " failure
 failure=${failure:-50}
 
-# Update config.json using sed
-echo "{ \"warning\": $warning, \"failure\": $failure }" > "$config_file"
+# Update config.json
+echo "{ \"warning\": 75, \"failure\": 50 }" > "$config_file"
+
 sed -i "s/\"warning\": [0-9]*/\"warning\": $warning/" "$config_file"
 sed -i "s/\"failure\": [0-9]*/\"failure\": $failure/" "$config_file"
 
+# Python Health Check
 if python3 --version > /dev/null 2>&1
 then
- echo "Health Check just Passed: Python3 is installed."
+    echo "Health Check Passed: Python3 is installed."
 else
- echo "Health Check Warning: Python3 is not installed."
+    echo "Health Check Warning: Python3 is not installed."
 fi
 
